@@ -1,0 +1,4 @@
+twitter-api-client
+python_dotenv
+certifi
+requests>=2.26.0

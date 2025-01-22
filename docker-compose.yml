@@ -1,0 +1,31 @@
+version: '3.9'
+services:
+  twitter:
+    image: twitter-filter
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - /var/run/tappd.sock:/var/run/tappd.sock      
+    env_file:
+      - private.env
+    extra_hosts:
+      - "api.twitter.com:192.168.10.2"
+    networks:
+      twitter_network:
+        ipv4_address: 192.168.10.3
+  proxy:
+    image: twitter-filter
+    env_file:
+      - private.env
+    command: python3 proxy_server.py
+    networks:
+      twitter_network:
+        ipv4_address: 192.168.10.2
+
+networks:
+  twitter_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.10.0/24
